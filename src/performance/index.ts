@@ -1,5 +1,5 @@
 import metricsStore, { metricsName, IMetrics } from '../../common/store'
-import type { ResourceFlowTiming } from '../../utils/performanceUtils'
+import type { ResourceFlowTiming } from './performanceUtils'
 import {
   getFP,
   getFCP,
@@ -8,7 +8,7 @@ import {
   getCLS,
   getNavigationTiming,
   getResourceFlow
-} from '../../utils/performanceUtils'
+} from './performanceUtils'
 
 export const afterLoad = (callback: any) => {
   if (document.readyState === 'complete') {
