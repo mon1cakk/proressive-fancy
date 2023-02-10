@@ -56,11 +56,24 @@ export default class UserVitals {
     this.initHttpHandler();
   }
 
+  // 封装用户行为的上报入口
+  userSendHandler = (data: IMetrics) => {
+    // 进行通知内核实例进行上报;
+  };
+
+  // 补齐 pathname 和 timestamp 参数
+  getExtends = (): { page: string; timestamp: number | string } => {
+    return {
+      page: getPageInfo().pathname,
+      timestamp: new Date().getTime(),
+    };
+  };
+
   // 初始化用户自定义CDR埋点数据的获取上报
   initCustomerHandler = (): Function => {
     const handler = (options: customAnalyticsData) => {
       // 记录到UserMetricsStore中
-      this.metrics.add(metricsName.CDR, options);
+      this.metrics.set(metricsName.CDR, options);
       // 自定义的埋点一般立马上报
       this.userSendHandler(options);
       // 记录到用户行为栈中
@@ -94,7 +107,7 @@ export default class UserVitals {
         pageInfo: getPageInfo()
       } as IMetrics;
       // 一般路由跳转的信息不会进行上报，根据业务形态决定；
-      this.metrics.add(metricsName.RCR, metrics);
+      this.metrics.set(metricsName.RCR, metrics);
       // 行为记录 不需要携带 pageInfo
       delete metrics.pageInfo;
       // 记录到行为记录追踪
@@ -163,7 +176,7 @@ export default class UserVitals {
         pageInfo: getPageInfo()
       } as IMetrics;
       // 除开商城业务外，一般不会特意上报点击行为的数据，都是作为辅助检查错误的数据存在;
-      this.metrics.add(metricsName.CBR, metrics);
+      this.metrics.set(metricsName.CBR, metrics);
       // 行为记录 不需要携带 完整的pageInfo
       delete metrics.pageInfo;
       // 记录到行为记录追踪
@@ -193,13 +206,14 @@ export default class UserVitals {
         delete metrics.body;
       }
       // 记录到 UserMetricsStore
-      this.metrics.add(metricsName.HT, metrics);
+      this.metrics.set(metricsName.HT, metrics);
       // 记录到用户行为记录栈
-      this.breadcrumbs.push({
+      const behavior = {
         category: metricsName.HT,
         data: metrics,
-        ...this.getExtends(),
-      });
+        ...this.getExtends()
+      } as behaviorStack
+      this.breadcrumbs.push(behavior);
     };
     proxyXmlHttp(null, loadHandler);
     proxyFetch(null, loadHandler);

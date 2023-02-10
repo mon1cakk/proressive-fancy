@@ -9,6 +9,11 @@
   "author": "leslieChen",
   "license": "ISC",
   "dependencies": {
-    "typescript": "4.3"
+    "bowser": "^2.11.0",
+    "ua-parser-js": "^1.0.33"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "typescript": "4.1"
   }
 }

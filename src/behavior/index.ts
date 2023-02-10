@@ -10,10 +10,10 @@ export enum metricsName {
 }
 
 export interface behaviorStack {
-  name: metricsName;
+  category: metricsName;
   page: string;
   timestamp: number | string;
-  value: Object;
+  data: Object;
 }
 
 export default class BehaviorStore {
