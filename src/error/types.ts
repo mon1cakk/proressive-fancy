@@ -31,3 +31,10 @@ export interface ExceptionMetrics {
 export interface ErrorVitalsInitOptions {
   Vue: any;
 }
+
+// 静态资源错误的 ErrorTarget
+export interface ResourceErrorTarget {
+  src?: string;
+  tagName?: string;
+  outerHTML?: string;
+}

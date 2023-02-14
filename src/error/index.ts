@@ -1,13 +1,15 @@
 import { mechanismType } from './types';
-import type { ErrorVitalsInitOptions, ExceptionMetrics } from './types'
+import type { ErrorVitalsInitOptions, ExceptionMetrics, ResourceErrorTarget } from './types'
 import { EngineInstance } from '../performance/index';
 import { getErrorUid, parseStackFrames } from './helper'
+import { httpMetrics, proxyXmlHttp, proxyFetch } from '../behavior/http'
+import type { Vue } from './vueError'
 
 //判断是js异常还是静态资源异常 跨域异常
 export const getErrorKey = (event: ErrorEvent | Event) => {
   const isJsError = event instanceof ErrorEvent;
   if (!isJsError) return mechanismType.RS;
-  return event.message === 'Script error.' ? mechanismType.CS : mechanismType.JS;
+  return event.message === 'Script error.' ? mechanismType.JS : mechanismType.CS;
 }
 
 //初始化的类
@@ -98,22 +100,122 @@ export default class ErrorVitals {
 
   // 初始化 静态资源异常 的数据获取和上报
   initResourceError = (): void => {
+    const handler = (event: Event) => {
+      event.preventDefault(); // 阻止向上抛出控制台报错
+      // 如果不是跨域脚本异常,就结束
+      if (getErrorKey(event) !== mechanismType.RS) return;
+      const target = event.target as ResourceErrorTarget;
+      const exception = {
+        // 上报错误归类
+        mechanism: {
+          type: mechanismType.RS,
+        },
+        // 错误信息
+        value: '',
+        // 错误类型
+        type: 'ResourceError',
+        // 用户行为追踪 breadcrumbs 在 errorSendHandler 中统一封装
+        // 页面基本信息 pageInformation 也在 errorSendHandler 中统一封装
+        // 错误的标识码
+        errorUid: getErrorUid(`${mechanismType.RS}-${target.src}-${target.tagName}`),
+        // 附带信息
+        meta: {
+          url: target.src,
+          html: target.outerHTML,
+          type: target.tagName,
+        },
+      } as ExceptionMetrics;
+      // 一般错误异常立刻上报，不用缓存在本地
+      this.errorSendHandler(exception);
+    };
+    //静态资源错误时，需将addEventListener的第三个参数设为true，因为静态资源无法在冒泡阶段捕获
+    window.addEventListener('error', (event) => handler(event), true);
   };
 
   // 初始化 Promise异常 的数据获取和上报
   initPromiseError = (): void => {
+    const handler = (event: PromiseRejectionEvent) => {
+      event.preventDefault(); // 阻止向上抛出控制台报错
+      const value = event.reason.name || event.reason;
+      const type = event.reason.type || 'UnKnowun'
+      const exception = {
+        // 上报错误归类
+        mechanism: {
+          type: mechanismType.UJ,
+        },
+        // 错误信息
+        value,
+        // 错误类型
+        type,
+        // 用户行为追踪 breadcrumbs 在 errorSendHandler 中统一封装
+        // 页面基本信息 pageInformation 也在 errorSendHandler 中统一封装
+        // 错误的标识码
+        errorUid: getErrorUid(`${mechanismType.UJ}-${value}-${type}`),
+        // 附带信息
+        meta: {}
+      } as ExceptionMetrics
+      this.errorSendHandler(exception);
+    }
+    window.addEventListener('unhandledrejection', (event) => handler(event), true);
   };
 
   // 初始化 HTTP请求异常 的数据获取和上报
   initHttpError = (): void => {
+    const loadHandler = (metrics: httpMetrics) => {
+      // 如果 status 状态码小于 400,说明没有 HTTP 请求错误
+      if (metrics.status < 400) return;
+      const value = metrics.response;
+      const exception = {
+        // 上报错误归类
+        mechanism: {
+          type: mechanismType.HP,
+        },
+        // 错误信息
+        value,
+        // 错误类型
+        type: 'HttpError',
+        // 错误的标识码
+        errorUid: getErrorUid(`${mechanismType.HP}-${value}-${metrics.statusText}`),
+        // 附带信息
+        meta: {
+          metrics,
+        },
+      } as ExceptionMetrics;
+      // 一般错误异常立刻上报，不用缓存在本地
+      this.errorSendHandler(exception);
+    };
+    proxyXmlHttp(null, loadHandler);
+    proxyFetch(null, loadHandler);
   };
 
   // 初始化 跨域异常 的数据获取和上报
   initCorsError = (): void => {
+    const handler = (event: ErrorEvent) => {
+      // 阻止向上抛出控制台报错
+      event.preventDefault();
+      // 如果不是跨域脚本异常,就结束
+      if (getErrorKey(event) !== mechanismType.CS) return;
+      const exception = {
+        // 上报错误归类
+        mechanism: {
+          type: mechanismType.CS,
+        },
+        // 错误信息
+        value: event.message,
+        // 错误类型
+        type: 'CorsError',
+        // 错误的标识码
+        errorUid: getErrorUid(`${mechanismType.JS}-${event.message}`),
+        // 附带信息
+        meta: {},
+      } as ExceptionMetrics;
+      // 自行上报异常，也可以跨域脚本的异常都不上报;
+      this.errorSendHandler(exception);
+    };
+    window.addEventListener('error', (event) => handler(event), true);
   };
 
   // 初始化 Vue异常 的数据获取和上报
-  //todo:后续需要将app的类型转化为vue
-  initVueError = (app: any): void => {
+  initVueError = (app: Vue): void => {
   };
 }
