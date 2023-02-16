@@ -20,9 +20,10 @@
     "paths": { // 指定模块的路径，和baseUrl有关联
     },
     "types": [
+      "node"
     ],
-    "target": "ES5", // 编译成什么版本
-    "module": "CommonJS", // 当前代码语法
+    "target": "ES2017", // 编译成什么版本
+    "module": "ESNext", // 当前代码语法
     // "outDir": "./dist/", // 输出目录
     "declaration": true, // 是否自动创建类型声明文件
     // "declarationMap": true,

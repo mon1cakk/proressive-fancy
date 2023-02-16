@@ -3,7 +3,8 @@ import type { ErrorVitalsInitOptions, ExceptionMetrics, ResourceErrorTarget } fr
 import { EngineInstance } from '../performance/index';
 import { getErrorUid, parseStackFrames } from './helper'
 import { httpMetrics, proxyXmlHttp, proxyFetch } from '../behavior/http'
-import type { Vue } from './vueError'
+import type { Vue, ViewModel } from './vueError'
+import { formatComponentName } from './vueError'
 
 //判断是js异常还是静态资源异常 跨域异常
 export const getErrorKey = (event: ErrorEvent | Event) => {
@@ -215,7 +216,34 @@ export default class ErrorVitals {
     window.addEventListener('error', (event) => handler(event), true);
   };
 
-  // 初始化 Vue异常 的数据获取和上报
   initVueError = (app: Vue): void => {
+    app.config.errorHandler = (err: Error, vm: ViewModel, info: string): void => {
+      const componentName = formatComponentName(vm, false);
+      const exception = {
+        // 上报错误归类
+        mechanism: {
+          type: mechanismType.VUE,
+        },
+        // 错误信息
+        value: err.message,
+        // 错误类型
+        type: err.name,
+        // 解析后的错误堆栈
+        stackTrace: {
+          frames: parseStackFrames(err),
+        },
+        // 错误的标识码
+        errorUid: getErrorUid(`${mechanismType.JS}-${err.message}-${componentName}-${info}`),
+        // 附带信息
+        meta: {
+          // 报错的Vue组件名
+          componentName,
+          // 报错的Vue阶段
+          hook: info,
+        },
+      } as ExceptionMetrics;
+      // 一般错误异常立刻上报，不用缓存在本地
+      this.errorSendHandler(exception);
+    };
   };
 }

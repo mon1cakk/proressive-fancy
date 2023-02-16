@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "bowser": "^2.11.0",
+    "request-promise": "^4.2.6",
+    "source-map": "^0.7.4",
     "ua-parser-js": "^1.0.33"
   },
   "devDependencies": {
