@@ -1,0 +1,14 @@
+{
+  "name": "@lesliejs/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "father-build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@lesliejs/web": "workspace:^1.0.0"
+  }
+}
