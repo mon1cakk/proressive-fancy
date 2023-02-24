@@ -15,7 +15,7 @@ export function parseStackLine(line: string) {
   const lineMatch = line.match(FULL_MATCH);
   if (!lineMatch) return {};
   const filename = lineMatch[2];
-  const functionName = lineMatch[1] || '';
+  const functionName = lineMatch[1] || "";
   const lineno = parseInt(lineMatch[3], 10) || undefined;
   const colno = parseInt(lineMatch[4], 10) || undefined;
   return {
@@ -32,7 +32,7 @@ export function parseStackFrames(error: Error) {
   // 无 stack 时直接返回
   if (!stack) return [];
   const frames = [];
-  for (const line of stack.split('\n').slice(1)) {
+  for (const line of stack.split("\n").slice(1)) {
     const frame = parseStackLine(line);
     if (Object.keys(frame).length) {
       frames.push(frame);

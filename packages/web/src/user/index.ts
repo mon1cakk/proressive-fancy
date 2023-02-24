@@ -1,20 +1,18 @@
-import { afterLoad } from '../performance/index';
-import { EngineInstance } from '../performance/index';
-import UserMetricsStore, { metricsName, IMetrics } from './store'
-import BehaviorStore from '../behavior/index'
-import { wrHistory, proxyHistory, proxyHash } from '../behavior/history'
-import { proxyXmlHttp, proxyFetch } from '../behavior/http'
-import { getOriginInfo } from '../behavior/origin'
-import type { PageInformation, customAnalyticsData } from './types'
-import type { behaviorStack } from '../behavior/index'
-import type { httpMetrics } from '../behavior/http'
-import type { OriginInformation } from '../behavior/origin'
-import {
-  getPageInfo
-} from './helper'
+import { afterLoad } from "../performance/index";
+import { EngineInstance } from "../performance/index";
+import UserMetricsStore, { metricsName, IMetrics } from "./store";
+import BehaviorStore from "../behavior/index";
+import { wrHistory, proxyHistory, proxyHash } from "../behavior/history";
+import { proxyXmlHttp, proxyFetch } from "../behavior/http";
+import { getOriginInfo } from "../behavior/origin";
+import type { PageInformation, customAnalyticsData } from "./types";
+import type { behaviorStack } from "../behavior/index";
+import type { httpMetrics } from "../behavior/http";
+import type { OriginInformation } from "../behavior/origin";
+import { getPageInfo } from "./helper";
 
 export default class UserVitals {
-  private engineInstance: EngineInstance
+  private readonly engineInstance: EngineInstance;
 
   // 本地暂存数据在 Map 里 （也可以自己用对象来存储）
   public metrics: UserMetricsStore;
@@ -35,11 +33,13 @@ export default class UserVitals {
     //限制最大场景追踪条目数
     this.maxBehaviorRecords = maxBehaviorRecords;
     //初始化行为追踪记录
-    this.breadcrumbs = new BehaviorStore({maxBehaviorRecords: this.maxBehaviorRecords});
+    this.breadcrumbs = new BehaviorStore({
+      maxBehaviorRecords: this.maxBehaviorRecords,
+    });
     //初始化用户自定义 事件捕获
     this.customHandler = this.initCustomerHandler();
     //初始化点击事件列表
-    this.clickMountList = ['button'].map((x) => x.toLocaleLowerCase());
+    this.clickMountList = ["button"].map((x) => x.toLocaleLowerCase());
     //重写路由事件
     wrHistory();
     //初始化页面基本信息
@@ -80,11 +80,11 @@ export default class UserVitals {
       const behavior = {
         category: metricsName.CDR,
         data: options,
-        ...this.getExtends()
-      } as behaviorStack
+        ...this.getExtends(),
+      } as behaviorStack;
       this.breadcrumbs.push(behavior);
-    }
-    return handler
+    };
+    return handler;
   };
 
   //初始化页面PI的基本信息及返回
@@ -92,7 +92,7 @@ export default class UserVitals {
     const info: PageInformation = getPageInfo();
     const metrics = info as IMetrics;
     this.metrics.set(metricsName.PI, metrics);
-  }
+  };
 
   //初始化路由RCR的跳转获取及返回
   initRouteChange = (): void => {
@@ -104,7 +104,7 @@ export default class UserVitals {
         // 创建时间
         timestamp: new Date().getTime(),
         // 页面信息
-        pageInfo: getPageInfo()
+        pageInfo: getPageInfo(),
       } as IMetrics;
       // 一般路由跳转的信息不会进行上报，根据业务形态决定；
       this.metrics.set(metricsName.RCR, metrics);
@@ -114,44 +114,44 @@ export default class UserVitals {
       const behavior = {
         category: metricsName.RCR,
         data: metrics,
-        ...this.getExtends()
+        ...this.getExtends(),
       } as behaviorStack;
       this.breadcrumbs.push(behavior);
     };
     proxyHash(handler);
     // 为 pushState 以及 replaceState 方法添加 Event 事件
     proxyHistory(handler);
-  }
+  };
 
   //初始化用户OI来由获取及返回
   initOriginInfo = (): void => {
     const info: OriginInformation = getOriginInfo();
     const metrics = info as IMetrics;
     this.metrics.set(metricsName.OI, metrics);
-  }
+  };
 
   //初始化pv的获取及返回
   initPV = (): void => {
     const handler = () => {
       const metrics = {
         // 还有一些标识用户身份的信息，由项目使用方传入，任意拓展 eg:userId
-      // 创建时间
-      timestamp: new Date().getTime(),
-      // 页面信息
-      pageInfo: getPageInfo(),
-      // 用户来路
-      originInformation: getOriginInfo()
-      } as IMetrics
+        // 创建时间
+        timestamp: new Date().getTime(),
+        // 页面信息
+        pageInfo: getPageInfo(),
+        // 用户来路
+        originInformation: getOriginInfo(),
+      } as IMetrics;
       // 一般来说， PV 可以立即上报
       this.userSendHandler(metrics);
-    }
+    };
     afterLoad(() => {
       handler();
-    })
+    });
     proxyHash(handler);
     // 为 pushState 以及 replaceState 方法添加 Event 事件
     proxyHistory(handler);
-  }
+  };
 
   //初始化CBR点击事件的获取及返回
   initClickHandler = (mountList: Array<string>): void => {
@@ -159,9 +159,15 @@ export default class UserVitals {
       // 这里是根据 tagName 进行是否需要捕获事件的依据，可以根据自己的需要，额外判断id/class等
       // 先判断浏览器支持 e.path ，从 path 里先取
       // chrome现已不支持e.path, 可用e.composedPath代替!!!
-      let target = e.path?.find((x: Element) => mountList.includes(x.tagName?.toLowerCase()));
+      let target = e.path?.find((x: Element) =>
+        mountList.includes(x.tagName?.toLowerCase())
+      );
       // 不支持 path 就再判断 target
-      target = target || (mountList.includes(e.target.tagName?.toLowerCase()) ? e.target : undefined);
+      target =
+        target ||
+        (mountList.includes(e.target.tagName?.toLowerCase())
+          ? e.target
+          : undefined);
       if (!target) return;
       const metrics = {
         tagInfo: {
@@ -173,7 +179,7 @@ export default class UserVitals {
         // 创建时间
         timestamp: new Date().getTime(),
         // 页面信息
-        pageInfo: getPageInfo()
+        pageInfo: getPageInfo(),
       } as IMetrics;
       // 除开商城业务外，一般不会特意上报点击行为的数据，都是作为辅助检查错误的数据存在;
       this.metrics.set(metricsName.CBR, metrics);
@@ -183,19 +189,19 @@ export default class UserVitals {
       const behavior = {
         category: metricsName.CBR,
         data: metrics,
-        ...this.getExtends()
+        ...this.getExtends(),
       } as behaviorStack;
       this.breadcrumbs.push(behavior);
     };
     //同理，想捕获 input、keydown、doubleClick 也是类似的写法
     window.addEventListener(
-      'click',
+      "click",
       (e) => {
         handler(e);
       },
-      true,
+      true
     );
-  }
+  };
 
   //初始化http请求数据HT的获取及返回
   initHttpHandler = (): void => {
@@ -211,11 +217,11 @@ export default class UserVitals {
       const behavior = {
         category: metricsName.HT,
         data: metrics,
-        ...this.getExtends()
-      } as behaviorStack
+        ...this.getExtends(),
+      } as behaviorStack;
       this.breadcrumbs.push(behavior);
     };
     proxyXmlHttp(null, loadHandler);
     proxyFetch(null, loadHandler);
-  }
+  };
 }

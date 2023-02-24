@@ -7,6 +7,6 @@ export interface OriginInformation {
 export const getOriginInfo = (): OriginInformation => {
   return {
     referrer: document.referrer,
-    type: window.performance?.navigation.type || '',
+    type: window.performance?.navigation.type || "",
   };
 };

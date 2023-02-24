@@ -1,5 +1,5 @@
 export interface PerformanceEntryHandler {
-  (entry: any): void
+  (entry: any): void;
 }
 
 export interface MPerformanceNavigationTiming {
@@ -31,46 +31,61 @@ export interface ResourceFlowTiming {
   contentDownload: number;
 }
 
-export const observe = (type: string, callback: PerformanceEntryHandler): PerformanceObserver | undefined => {
+export const observe = (
+  type: string,
+  callback: PerformanceEntryHandler
+): PerformanceObserver | undefined => {
   //类型合规，就返回observe
   if (PerformanceObserver.supportedEntryTypes?.includes(type)) {
-    const ob: PerformanceObserver = new PerformanceObserver((listener) => listener.getEntries().map(callback));
-    ob.observe({type, buffered: true});
-    return ob
+    const ob: PerformanceObserver = new PerformanceObserver((listener) =>
+      listener.getEntries().map(callback)
+    );
+    ob.observe({ type, buffered: true });
+    return ob;
   }
-  return undefined
-}
+  return undefined;
+};
 
 // 获取 FP
 export const getFP = (): PerformanceEntry | undefined => {
-  const [entry] = performance.getEntriesByName('first-paint');
+  const [entry] = performance.getEntriesByName("first-paint");
   return entry;
 };
 
 //获取 FCP
 export const getFCP = (): PerformanceEntry | undefined => {
-  const [entry] = performance.getEntriesByName('first-contentful-paint');
+  const [entry] = performance.getEntriesByName("first-contentful-paint");
   return entry;
-}
+};
 
 //获取 LCP
-export const getLCP = (entryHandler: PerformanceEntryHandler): PerformanceObserver | undefined => {
-  return observe('largest-contentful-paint', entryHandler);
+export const getLCP = (
+  entryHandler: PerformanceEntryHandler
+): PerformanceObserver | undefined => {
+  return observe("largest-contentful-paint", entryHandler);
 };
 
 //获取 FID
-export const getFID = (entryHandler: PerformanceEntryHandler): PerformanceObserver | undefined => {
-  return observe('first-input', entryHandler);
+export const getFID = (
+  entryHandler: PerformanceEntryHandler
+): PerformanceObserver | undefined => {
+  return observe("first-input", entryHandler);
 };
 
 //获取 CLS
-export const getCLS = (entryHandler: PerformanceEntryHandler): PerformanceObserver | undefined => {
-  return observe('layout-shift', entryHandler);
+export const getCLS = (
+  entryHandler: PerformanceEntryHandler
+): PerformanceObserver | undefined => {
+  return observe("layout-shift", entryHandler);
 };
 
 //获取 NT
-export const getNavigationTiming = (): MPerformanceNavigationTiming | undefined => {
-  const resolveNavigationTiming = (entry: PerformanceNavigationTiming): MPerformanceNavigationTiming => {
+export const getNavigationTiming = ():
+  | MPerformanceNavigationTiming
+  | undefined => {
+  const resolveNavigationTiming = (
+    entry: PerformanceNavigationTiming
+  ): MPerformanceNavigationTiming => {
     const {
       domainLookupStart,
       domainLookupEnd,
@@ -107,14 +122,16 @@ export const getNavigationTiming = (): MPerformanceNavigationTiming | undefined 
   const navigation =
     // W3C Level2  PerformanceNavigationTiming
     // 使用了High-Resolution Time，时间精度可以达毫秒的小数点好几位。
-    performance.getEntriesByType('navigation').length > 0
-      ? performance.getEntriesByType('navigation')[0]
+    performance.getEntriesByType("navigation").length > 0
+      ? performance.getEntriesByType("navigation")[0]
       : performance.timing; // W3C Level1  (目前兼容性高，仍然可使用，未来可能被废弃)。
   return resolveNavigationTiming(navigation as PerformanceNavigationTiming);
 };
 
 //获取 RF
-export const getResourceFlow = (resourceFlow: Array<ResourceFlowTiming>): PerformanceObserver | undefined => {
+export const getResourceFlow = (
+  resourceFlow: Array<ResourceFlowTiming>
+): PerformanceObserver | undefined => {
   const entryHandler = (entry: PerformanceResourceTiming) => {
     const {
       name,
@@ -151,5 +168,5 @@ export const getResourceFlow = (resourceFlow: Array<ResourceFlowTiming>): Perfor
     });
   };
 
-  return observe('resource', entryHandler);
+  return observe("resource", entryHandler);
 };

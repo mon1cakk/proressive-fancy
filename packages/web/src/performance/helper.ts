@@ -1,4 +1,4 @@
-const resource = performance.getEntriesByType('resource');
+const resource = performance.getEntriesByType("resource");
 let cacheQuantity = 0;
 const formatResourceArray = resource.map((item: any) => {
   if (item.duration == 0 && item.transferSize !== 0) cacheQuantity++;
@@ -14,4 +14,4 @@ const formatResourceArray = resource.map((item: any) => {
     //但是受到跨域资源影响。除非资源设置允许获取timing
   };
 });
-console.log('缓存命中率', (cacheQuantity / resource.length).toFixed(2));
+console.log("缓存命中率", (cacheQuantity / resource.length).toFixed(2));

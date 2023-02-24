@@ -3,10 +3,10 @@ export interface behaviorRecordsOptions {
 }
 
 export enum metricsName {
-  RCR = 'router-change-record',
-  CBR = 'click-behavior-record',
-  CDR = 'custom-define-record',
-  HT = 'http-record'
+  RCR = "router-change-record",
+  CBR = "click-behavior-record",
+  CDR = "custom-define-record",
+  HT = "http-record",
 }
 
 export interface behaviorStack {
@@ -20,7 +20,7 @@ export default class BehaviorStore {
   //数组形式记录行为的stack
   private state: Array<behaviorStack>;
   //最大行为记录条目数
-  private maxBehaviorRecords: number;
+  private readonly maxBehaviorRecords: number;
 
   // 外部传入 options 初始化，
   constructor(options: behaviorRecordsOptions) {

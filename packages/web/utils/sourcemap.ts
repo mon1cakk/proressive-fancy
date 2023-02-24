@@ -1,7 +1,7 @@
 // 这里因为 npm 装了 babel，所以用的 import，正常 nodejs 下为 require
-import sourceMap from 'source-map';    //source-map库
-import fs from 'fs'                    //fs为nodejs读取文件的库
-import rp from 'request-promise'
+import sourceMap from "source-map"; //source-map库
+import fs from "fs"; //fs为nodejs读取文件的库
+import rp from "request-promise";
 
 /**
  * @description:  用来解析 sourcemap 的函数方法
@@ -11,7 +11,12 @@ import rp from 'request-promise'
  * @param {*} offset  需要截取几行的代码
  * @return {*}
  */
-export const sourceMapAnalysis = async (sourceMapFile, line, column, offset) => {
+export const sourceMapAnalysis = async (
+  sourceMapFile,
+  line,
+  column,
+  offset
+) => {
   // 通过 sourceMap 库转换为sourceMapConsumer对象
   const consumer = await new sourceMap.SourceMapConsumer(sourceMapFile);
   // 传入要查找的行列数，查找到压缩前的源文件及行列数
@@ -42,24 +47,26 @@ export const sourceMapAnalysis = async (sourceMapFile, line, column, offset) => 
     originLine: sm.line + 1, // line 是从 0 开始数，所以 +1
     // source 报错的文件路径
     source: sm.source,
-  }
+  };
 };
 
 // 请求线上的 .map 文件进行解析
-export const loadMapFileByUrl = async (url)=>{
-  return await rp(url)
-}
+export const loadMapFileByUrl = async (url) => {
+  return await rp(url);
+};
 const line = 9;
 const column = 492621;
 const rawSourceMap = JSON.parse(
   // 这里加载在本地的 .map 文件
-  fs.readFileSync('./xxxxxxxxxxxxxxx.map','utf-8').toString()    // 路径自拟
+  fs.readFileSync("./xxxxxxxxxxxxxxx.map", "utf-8").toString() // 路径自拟
 );
-const inlineSourceMap = JSON.parse(await loadMapFileByUrl('http://xxxxxxxxxxxx.map')) // 路径自换
+const inlineSourceMap = JSON.parse(
+  await loadMapFileByUrl("http://xxxxxxxxxxxx.map")
+); // 路径自换
 
 // 从url获取 sourcemap 文件
 // const res = await sourceMapAnalysis(inlineSourceMap,line,column,2)
 // 从本地获取 sourcemap 文件
-const res = await sourceMapAnalysis(rawSourceMap,line,column,2)
+const res = await sourceMapAnalysis(rawSourceMap, line, column, 2);
 
 console.log(res);

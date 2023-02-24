@@ -1,5 +1,5 @@
-import metricsStore, { metricsName, IMetrics } from '../../common/store'
-import type { ResourceFlowTiming } from './performanceUtils'
+import metricsStore, { metricsName, IMetrics } from "../../common/store";
+import type { ResourceFlowTiming } from "./performanceUtils";
 import {
   getFP,
   getFCP,
@@ -7,19 +7,22 @@ import {
   getFID,
   getCLS,
   getNavigationTiming,
-  getResourceFlow
-} from './performanceUtils'
+  getResourceFlow,
+} from "./performanceUtils";
 
 export const afterLoad = (callback: any) => {
-  if (document.readyState === 'complete') {
+  if (document.readyState === "complete") {
     setTimeout(callback);
   } else {
-    window.addEventListener('pageshow', callback, {once: true, capture: true})
+    window.addEventListener("pageshow", callback, {
+      once: true,
+      capture: true,
+    });
   }
-}
+};
 
 export interface EngineInstance {
-  [prop: string | number] : any
+  [prop: string | number]: any;
 }
 
 export interface LayoutShift extends PerformanceEntry {
@@ -29,7 +32,7 @@ export interface LayoutShift extends PerformanceEntry {
 
 // 初始化入口，外部调用只需要 new WebVitals()
 export default class WebVitals {
-  private engineInstance: EngineInstance;
+  private readonly engineInstance: EngineInstance;
 
   //本地暂存数据在Map里（也可以自己用对象来存储）
   public metrics: metricsStore;
@@ -47,14 +50,14 @@ export default class WebVitals {
       this.initFCP();
       this.initFID();
       this.perfSendHandler();
-    })
+    });
   }
 
   // 性能数据的上报策略
   perfSendHandler = (): void => {
     // 如果你要监听 FID 数据。你就需要等待 FID 参数捕获完成后进行上报;
     // 如果不需要监听 FID，那么这里你就可以发起上报请求了;
-  }
+  };
 
   // 初始化 FP 的获取以及返回
   initFP = (): void => {
@@ -104,15 +107,15 @@ export default class WebVitals {
   initCLS = (): void => {
     let clsValue = 0;
     let clsEntries = [];
-  
+
     let sessionValue = 0;
     let sessionEntries: Array<LayoutShift> = [];
-  
+
     const entryHandler = (entry: LayoutShift) => {
       if (!entry.hadRecentInput) {
         const firstSessionEntry = sessionEntries[0];
         const lastSessionEntry = sessionEntries[sessionEntries.length - 1];
-  
+
         // 如果条目与上一条目的相隔时间小于 1 秒且
         // 与会话中第一个条目的相隔时间小于 5 秒，那么将条目
         // 包含在当前会话中。否则，开始一个新会话。
@@ -127,13 +130,13 @@ export default class WebVitals {
           sessionValue = entry.value;
           sessionEntries = [entry];
         }
-  
+
         // 如果当前会话值大于当前 CLS 值，
         // 那么更新 CLS 及其相关条目。
         if (sessionValue > clsValue) {
           clsValue = sessionValue;
           clsEntries = sessionEntries;
-  
+
           // 记录 CLS 到 Map 里
           const metrics = {
             entry,
@@ -158,7 +161,7 @@ export default class WebVitals {
   initResourceFlow = (): void => {
     const resourceFlow: Array<ResourceFlowTiming> = [];
     const resObserve = getResourceFlow(resourceFlow);
-  
+
     const stopListening = () => {
       if (resObserve) {
         resObserve.disconnect();
@@ -167,6 +170,9 @@ export default class WebVitals {
       this.metrics.set(metricsName.RF, metrics);
     };
     // 当页面 pageshow 触发时，中止
-    window.addEventListener('pageshow', stopListening, { once: true, capture: true });
+    window.addEventListener("pageshow", stopListening, {
+      once: true,
+      capture: true,
+    });
   };
 }

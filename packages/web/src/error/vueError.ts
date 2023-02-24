@@ -21,9 +21,10 @@ export interface ViewModel {
 
 // 获取报错组件名
 const classifyRE = /(?:^|[-_])(\w)/g;
-const classify = (str: string) => str.replace(classifyRE, (c) => c.toUpperCase()).replace(/[-_]/g, '');
-const ROOT_COMPONENT_NAME = '<Root>';
-const ANONYMOUS_COMPONENT_NAME = '<Anonymous>';
+const classify = (str: string) =>
+  str.replace(classifyRE, (c) => c.toUpperCase()).replace(/[-_]/g, "");
+const ROOT_COMPONENT_NAME = "<Root>";
+const ANONYMOUS_COMPONENT_NAME = "<Anonymous>";
 export const formatComponentName = (vm: ViewModel, includeFile: Boolean) => {
   if (!vm) {
     return ANONYMOUS_COMPONENT_NAME;
@@ -41,6 +42,7 @@ export const formatComponentName = (vm: ViewModel, includeFile: Boolean) => {
     }
   }
   return (
-    (name ? `<${classify(name)}>` : ANONYMOUS_COMPONENT_NAME) + (file && includeFile !== false ? ` at ${file}` : '')
+    (name ? `<${classify(name)}>` : ANONYMOUS_COMPONENT_NAME) +
+    (file && includeFile !== false ? ` at ${file}` : "")
   );
 };

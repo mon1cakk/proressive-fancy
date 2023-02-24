@@ -1,15 +1,15 @@
 export enum metricsName {
-  FP = 'first-paint',
-  FCP = 'first-contentful-paint',
-  LCP = 'largest-contentful-paint',
-  FID = 'first-input-delay',
-  CLS = 'cumulative-layout-shift',
-  NT = 'navigation-timing',
-  RF = 'resource-flow'
+  FP = "first-paint",
+  FCP = "first-contentful-paint",
+  LCP = "largest-contentful-paint",
+  FID = "first-input-delay",
+  CLS = "cumulative-layout-shift",
+  NT = "navigation-timing",
+  RF = "resource-flow",
 }
 
 export interface IMetrics {
-  [prop: string | number] : any
+  [prop: string | number]: any;
 }
 
 //Map暂存数据

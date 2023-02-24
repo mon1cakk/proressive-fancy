@@ -10,8 +10,14 @@ export interface httpMetrics {
 }
 
 // 调用 proxyXmlHttp 即可完成全局监听 XMLHttpRequest
-export const proxyXmlHttp = (sendHandler: Function | null | undefined, loadHandler: Function) => {
-  if ('XMLHttpRequest' in window && typeof window.XMLHttpRequest === 'function') {
+export const proxyXmlHttp = (
+  sendHandler: Function | null | undefined,
+  loadHandler: Function
+) => {
+  if (
+    "XMLHttpRequest" in window &&
+    typeof window.XMLHttpRequest === "function"
+  ) {
     const oXMLHttpRequest = window.XMLHttpRequest;
     if (!(window as any).oXMLHttpRequest) {
       // oXMLHttpRequest 为原生的 XMLHttpRequest，可以用以 SDK 进行数据上报，区分业务
@@ -28,15 +34,15 @@ export const proxyXmlHttp = (sendHandler: Function | null | undefined, loadHandl
         open.call(xhr, method, url, true);
       };
       xhr.send = (body) => {
-        metrics.body = body || '';
+        metrics.body = body || "";
         metrics.requestTime = new Date().getTime();
         // sendHandler 可以在发送 Ajax 请求之前，挂载一些信息，比如 header 请求头
         // setRequestHeader 设置请求header，用来传输关键参数等
         // xhr.setRequestHeader('xxx-id', 'VQVE-QEBQ');
-        if (typeof sendHandler === 'function') sendHandler(xhr);
+        if (typeof sendHandler === "function") sendHandler(xhr);
         send.call(xhr, body);
       };
-      xhr.addEventListener('loadend', () => {
+      xhr.addEventListener("loadend", () => {
         const { status, statusText, response } = xhr;
         // xhr.status 状态码
         metrics = {
@@ -46,7 +52,7 @@ export const proxyXmlHttp = (sendHandler: Function | null | undefined, loadHandl
           response,
           responseTime: new Date().getTime(),
         };
-        if (typeof loadHandler === 'function') loadHandler(metrics);
+        if (typeof loadHandler === "function") loadHandler(metrics);
       });
       return xhr;
     };
@@ -54,20 +60,25 @@ export const proxyXmlHttp = (sendHandler: Function | null | undefined, loadHandl
 };
 
 // 调用 proxyFetch 即可完成全局监听 fetch
-export const proxyFetch = (sendHandler: Function | null | undefined, loadHandler: Function) => {
-  if ('fetch' in window && typeof window.fetch === 'function') {
+export const proxyFetch = (
+  sendHandler: Function | null | undefined,
+  loadHandler: Function
+) => {
+  if ("fetch" in window && typeof window.fetch === "function") {
     const oFetch = window.fetch;
     if (!(window as any).oFetch) {
       (window as any).oFetch = oFetch;
     }
+    // eslint-disable-next-line @typescript-eslint/require-await
     (window as any).fetch = async (input: any, init: RequestInit) => {
       // init 是用户手动传入的 fetch 请求互数据，包括了 method、body、headers，要做统一拦截数据修改，直接改init即可
-      if (typeof sendHandler === 'function') sendHandler(init);
+      if (typeof sendHandler === "function") sendHandler(init);
       let metrics = {} as httpMetrics;
 
-      metrics.method = init?.method || '';
-      metrics.url = (input && typeof input !== 'string' ? input?.url : input) || ''; // 请求的url
-      metrics.body = init?.body || '';
+      metrics.method = init?.method || "";
+      metrics.url =
+        (input && typeof input !== "string" ? input?.url : input) || ""; // 请求的url
+      metrics.body = init?.body || "";
       metrics.requestTime = new Date().getTime();
 
       return oFetch.call(window, input, init).then(async (response) => {
@@ -80,7 +91,7 @@ export const proxyFetch = (sendHandler: Function | null | undefined, loadHandler
           response: await res.text(),
           responseTime: new Date().getTime(),
         };
-        if (typeof loadHandler === 'function') loadHandler(metrics);
+        if (typeof loadHandler === "function") loadHandler(metrics);
         return response;
       });
     };
