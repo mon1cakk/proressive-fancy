@@ -5,7 +5,7 @@ import type {
   ResourceErrorTarget,
 } from "./types";
 import { EngineInstance } from "../performance/index";
-import { getErrorUid, parseStackFrames } from "./helper";
+import { getErrorUid, parseStackFrames } from "@lesliejs/core";
 import { httpMetrics, proxyXmlHttp, proxyFetch } from "../behavior/http";
 import type { Vue, ViewModel } from "./vueError";
 import { formatComponentName } from "./vueError";

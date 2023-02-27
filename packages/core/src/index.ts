@@ -6,3 +6,4 @@ function fun2() {
 }
 
 export default fun2;
+export * from './helper'

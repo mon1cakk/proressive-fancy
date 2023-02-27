@@ -2,7 +2,10 @@
  * todo: 后续添加用户停留时长的行为上报
  */
 
-const routeList = [];
+const routeList: {
+  endTime: number;
+  duration: number; startTime: number; 
+}[] = [];
 const routeTemplate = {
   userId: "", // 用户信息等
   // 除了userId以外，还可以附带一些其余的用户特征到这里面

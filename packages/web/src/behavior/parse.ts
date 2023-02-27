@@ -2,7 +2,7 @@ import parser from "ua-parser-js";
 import Bowser from "bowser";
 
 // 获取user-agent解析
-function getFeature(userAgent) {
+function getFeature(userAgent: string) {
   const browserData = Bowser.parse(userAgent);
   const parserData = parser(userAgent);
   const browserName = browserData.browser.name || parserData.browser.name; // 浏览器名
