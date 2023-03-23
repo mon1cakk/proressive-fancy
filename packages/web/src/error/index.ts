@@ -84,7 +84,7 @@ export default class ErrorVitals {
         // 错误信息
         value: event.message,
         // 错误类型
-        type: (event.error && event.error.name) || "UnKnowun",
+        type: (event.error && event.error.name) || "UnKnown",
         // 解析后的错误堆栈
         stackTrace: {
           frames: parseStackFrames(event.error),
@@ -152,7 +152,7 @@ export default class ErrorVitals {
     const handler = (event: PromiseRejectionEvent) => {
       event.preventDefault(); // 阻止向上抛出控制台报错
       const value = event.reason.name || event.reason;
-      const type = event.reason.type || "UnKnowun";
+      const type = event.reason.type || "UnKnown";
       const exception = {
         // 上报错误归类
         mechanism: {
@@ -226,7 +226,7 @@ export default class ErrorVitals {
         // 错误类型
         type: "CorsError",
         // 错误的标识码
-        errorUid: getErrorUid(`${mechanismType.JS}-${event.message}`),
+        errorUid: getErrorUid(`${mechanismType.CS}-${event.message}`),
         // 附带信息
         meta: {},
       } as ExceptionMetrics;
@@ -258,7 +258,7 @@ export default class ErrorVitals {
         },
         // 错误的标识码
         errorUid: getErrorUid(
-          `${mechanismType.JS}-${err.message}-${componentName}-${info}`
+          `${mechanismType.VUE}-${err.message}-${componentName}-${info}`
         ),
         // 附带信息
         meta: {

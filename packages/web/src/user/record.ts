@@ -4,7 +4,8 @@
 
 const routeList: {
   endTime: number;
-  duration: number; startTime: number; 
+  duration: number;
+  startTime: number;
 }[] = [];
 const routeTemplate = {
   userId: "", // 用户信息等

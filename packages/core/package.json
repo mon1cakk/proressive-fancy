@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lesliejs/web": "workspace:^1.0.0"
+    "@lesliejs/shared": "workspace:^1.0.0"
   }
 }

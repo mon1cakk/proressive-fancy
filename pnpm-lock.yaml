@@ -41,12 +41,15 @@ importers:
 
   packages/core:
     specifiers:
-      '@lesliejs/web': workspace:^1.0.0
+      '@lesliejs/shared': workspace:^1.0.0
     dependencies:
-      '@lesliejs/web': link:../web
+      '@lesliejs/shared': link:../shared
 
   packages/web:
-    specifiers: {}
+    specifiers:
+      '@lesliejs/core': workspace:^1.0.0
+    dependencies:
+      '@lesliejs/core': link:../core
 
 packages:
 

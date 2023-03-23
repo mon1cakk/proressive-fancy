@@ -1,14 +1,14 @@
 export enum transportCategory {
   // PV访问数据
-  PV = 'pv',
+  PV = "pv",
   // 性能数据
-  PERF = 'perf',
+  PERF = "perf",
   // api 请求数据
-  API = 'api',
+  API = "api",
   // 报错数据
-  ERROR = 'error',
+  ERROR = "error",
   // 自定义行为
-  CUS = 'custom',
+  CUS = "custom",
 }
 
 export interface DimensionStructure {
@@ -51,7 +51,10 @@ export default class TransportInstance {
   }
 
   // 格式化数据,传入部分为 category 和 context \ contexts
-  formatTransportData = (category: transportCategory, data: Object | Array<Object>): TransportStructure => {
+  formatTransportData = (
+    category: transportCategory,
+    data: Object | Array<Object>
+  ): TransportStructure => {
     const transportStructure = {
       category,
       dimension: this.engineInstance.dimensionInstance.getDimension(),
@@ -67,13 +70,18 @@ export default class TransportInstance {
 
   // 初始化上报方法
   initTransportHandler = () => {
-    return typeof navigator.sendBeacon === 'function' ? this.beaconTransport() : this.xmlTransport();
+    return typeof navigator.sendBeacon === "function"
+      ? this.beaconTransport()
+      : this.xmlTransport();
   };
 
   // beacon 形式上报
   beaconTransport = (): Function => {
     const handler = (data: TransportStructure) => {
-      const status = window.navigator.sendBeacon(this.options.transportUrl, JSON.stringify(data));
+      const status = window.navigator.sendBeacon(
+        this.options.transportUrl,
+        JSON.stringify(data)
+      );
       // 如果数据量过大，则本次大数据量用 XMLHttpRequest 上报
       if (!status) this.xmlTransport().apply(this, data);
     };
@@ -84,7 +92,7 @@ export default class TransportInstance {
   xmlTransport = (): Function => {
     const handler = (data: TransportStructure) => {
       const xhr = new (window as any).oXMLHttpRequest();
-      xhr.open('POST', this.options.transportUrl, true);
+      xhr.open("POST", this.options.transportUrl, true);
       xhr.send(JSON.stringify(data));
     };
     return handler;
