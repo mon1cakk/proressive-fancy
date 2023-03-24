@@ -1,5 +1,5 @@
 {
-  "include": ["src", "types", "test"],
+  "include": ["src", "types", "test", "../core/src/behavior", "src/core/error", "src/core/utils", "src/core/user", "src/core/performance"],
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",

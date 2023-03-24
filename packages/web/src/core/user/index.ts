@@ -1,14 +1,14 @@
 import { afterLoad } from "../performance/index";
 import { EngineInstance } from "../performance/index";
 import UserMetricsStore, { metricsName, IMetrics } from "./store";
-import BehaviorStore from "../behavior/index";
-import { wrHistory, proxyHistory, proxyHash } from "../behavior/history";
-import { proxyXmlHttp, proxyFetch } from "../behavior/http";
-import { getOriginInfo } from "../behavior/origin";
+import BehaviorStore from "../../../../core/src/behavior/index";
+import { wrHistory, proxyHistory, proxyHash } from "../../../../core/src/behavior/history";
+import { proxyXmlHttp, proxyFetch } from "../../../../core/src/behavior/http";
+import { getOriginInfo } from "../../../../core/src/behavior/origin";
 import type { PageInformation, customAnalyticsData } from "./types";
-import type { behaviorStack } from "../behavior/index";
-import type { httpMetrics } from "../behavior/http";
-import type { OriginInformation } from "../behavior/origin";
+import type { behaviorStack } from "../../../../core/src/behavior/index";
+import type { httpMetrics } from "../../../../core/src/behavior/http";
+import type { OriginInformation } from "../../../../core/src/behavior/origin";
 import { getPageInfo } from "./helper";
 
 export default class UserVitals {
