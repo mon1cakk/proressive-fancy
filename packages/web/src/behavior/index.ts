@@ -16,7 +16,7 @@ export interface behaviorStack {
   data: Object;
 }
 
-export default class BehaviorStore {
+export class BehaviorStore {
   //数组形式记录行为的stack
   private state: Array<behaviorStack>;
   //最大行为记录条目数

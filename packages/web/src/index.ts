@@ -1,5 +1,6 @@
-function fun2() {
-  console.log("I am package 2");
-}
+// function fun2() {
+//   console.log("I am package 2");
+// }
 
-export default fun2;
+// export default fun2;
+export * from './behavior/index'
