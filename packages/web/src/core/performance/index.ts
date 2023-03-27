@@ -1,4 +1,4 @@
-import metricsStore, { metricsName, IMetrics } from "../../common/store";
+import metricsStore, { metricsName, IMetrics } from "../common/store";
 import type { ResourceFlowTiming } from "./performanceUtils";
 import {
   getFP,
