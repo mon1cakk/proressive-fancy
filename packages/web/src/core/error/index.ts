@@ -6,7 +6,11 @@ import type {
 } from "./types";
 import { EngineInstance } from "../performance/index";
 import { getErrorUid, parseStackFrames } from "@lesliejs/core";
-import { httpMetrics, proxyXmlHttp, proxyFetch } from "../../../../core/src/behavior/http";
+import {
+  httpMetrics,
+  proxyXmlHttp,
+  proxyFetch,
+} from "../../../../core/src/behavior/http";
 import type { Vue, ViewModel } from "./vueError";
 import { formatComponentName } from "./vueError";
 

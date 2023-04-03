@@ -2,7 +2,11 @@ import { afterLoad } from "../performance/index";
 import { EngineInstance } from "../performance/index";
 import UserMetricsStore, { metricsName, IMetrics } from "./store";
 import BehaviorStore from "../../../../core/src/behavior/index";
-import { wrHistory, proxyHistory, proxyHash } from "../../../../core/src/behavior/history";
+import {
+  wrHistory,
+  proxyHistory,
+  proxyHash,
+} from "../../../../core/src/behavior/history";
 import { proxyXmlHttp, proxyFetch } from "../../../../core/src/behavior/http";
 import { getOriginInfo } from "../../../../core/src/behavior/origin";
 import type { PageInformation, customAnalyticsData } from "./types";
