@@ -1,13 +1,13 @@
 import { handleOptions, log, setupReplace, HandleEvents } from './core';
-import { getFlag, setFlag } from './utils';
-import { SDK_VERSION, SDK_NAME } from '@lesliejs/shared';
+import {  getFlag, setFlag } from '@lesliejs/utils';
+import { SDK_VERSION, SDK_NAME, EVENTTYPES } from '@lesliejs/shared';
 import { InitOptions, VueInstance, ViewModel } from './types';
 
 function init(options: InitOptions): void {
   if (!options.dsn || !options.apikey) {
-    return console.error(`web-see 缺少必须配置项：${!options.dsn ? 'dsn' : 'apikey'} `);
+    return console.error(`lesliejs 缺少必须配置项：${!options.dsn ? 'dsn' : 'apikey'} `);
   }
-  if (!('fetch'||'XMLHttpRequest' in window) || options.disabled) return;
+  if (!('fetch' in window) || options.disabled) return;
   // 初始化配置
   handleOptions(options);
   setupReplace();

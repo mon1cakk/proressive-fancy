@@ -1,15 +1,28 @@
 import { UAParser } from 'ua-parser-js';
 import { variableTypeDetection } from './is';
-import { Lesliejs } from '../types';
 
 export const isBrowserEnv = variableTypeDetection.isWindow(
   typeof window !== 'undefined' ? window : 0
 );
-// 获取全局变量
-export function getGlobal() {
-  if (isBrowserEnv) return window;
+
+export interface LeslieSupport {
+  replaceFlag: any
+  deviceInfo?: any
 }
-const _global = getGlobal();
+interface LESLIEGlobal {
+  console?: Console
+  __lesliejs__?: LeslieSupport
+}
+
+/**
+ * 获取全局变量
+ *
+ * ../returns Global scope object
+ */
+export function getGlobal<T>() {
+  if (isBrowserEnv) return window as unknown as LESLIEGlobal & T
+}
+const _global = getGlobal<Window>();
 const _support = getGlobalSupport();
 const uaResult = new UAParser().getResult();
 
@@ -20,7 +33,7 @@ _support.deviceInfo = {
   osVersion: uaResult.os.version, // 操作系统 电脑系统 10
   os: uaResult.os.name, // Windows
   ua: uaResult.ua,
-  device: uaResult.device.model ? uaResult.device.model : 'Unknow',
+  device: uaResult.device.model ? uaResult.device.model : 'Unknown',
   device_type: uaResult.device.type ? uaResult.device.type : 'Pc',
 };
 
@@ -33,10 +46,10 @@ export function setFlag(replaceType, isSet) {
 export function getFlag(replaceType) {
   return replaceFlag[replaceType] ? true : false;
 }
-// 获取全部变量__webSee__的引用地址
+// 获取全部变量__lesliejs__的引用地址
 export function getGlobalSupport() {
-  window.__lesliejs__ = _global.__lesliejs__ || ({} as Lesliejs);
-  return window.__lesliejs__;
+  _global.__lesliejs__ = _global.__lesliejs__ || ({} as LeslieSupport)
+  return _global.__lesliejs__
 }
 // export function supportsHistory(): boolean {
 //   const chrome = _global.chrome;
@@ -46,3 +59,4 @@ export function getGlobalSupport() {
 //   return !isChromePackagedApp && hasHistoryApi;
 // }
 
+export { _global, _support };
