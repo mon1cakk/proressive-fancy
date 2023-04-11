@@ -2,7 +2,6 @@
   "name": "progressive-fancy",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "pnpm --filter=@lesliejs/* run build",
@@ -11,6 +10,7 @@
     "version-packages": "changeset version",
     "release": "pnpm build && pnpm release:only",
     "release:only": "changeset publish --registry=https://registry.npmjs.com/",
+    "publish": "changeset publish --registry=https://registry.npmjs.com/",
     "format": "prettier --write \"packages/**/*.ts?(x)\" && eslint --fix --ext .ts packages",
     "commit": "git add . && git cz",
     "postinstall": "husky install"
@@ -19,21 +19,30 @@
   "license": "ISC",
   "dependencies": {
     "bowser": "^2.11.0",
-    "request-promise": "^4.2.6",
+    "error-stack-parser": "^2.1.4",
+    "js-base64": "^3.7.5",
+    "rrweb": "2.0.0-alpha.4",
     "source-map": "^0.7.4",
-    "ua-parser-js": "^1.0.33"
+    "ua-parser-js": "^1.0.33",
+    "web-vitals": "^3.3.1"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
+    "@rollup/plugin-commonjs": "23.0.3",
+    "@rollup/plugin-json": "5.0.2",
+    "@rollup/plugin-node-resolve": "15.0.1",
     "@types/node": "^18.13.0",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.34.0",
     "eslint-plugin-html": "6.0.2",
-    "father-build": "^1.22.5",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
+    "rollup": "^2.78.0",
+    "rollup-plugin-dts": "^5.0.0",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "rollup-plugin-uglify": "^6.0.4",
     "tslib": "2.3.1",
     "typescript": "4.1"
   },

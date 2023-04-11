@@ -1,5 +1,5 @@
 {
-  "name": "@lesliejs/core",
+  "name": "@lesliejs/common",
   "version": "1.1.1",
   "description": "",
   "main": "src/index.ts",
@@ -13,11 +13,6 @@
   ],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@lesliejs/common": "workspace:*",
-    "@lesliejs/types": "workspace:*",
-    "@lesliejs/utils": "workspace:*"
-  },
   "repository": {
     "type": "git",
     "url": ""
