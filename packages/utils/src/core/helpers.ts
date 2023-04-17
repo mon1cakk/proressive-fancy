@@ -1,4 +1,4 @@
-import { variableTypeDetection } from "./is";
+import { variableTypeDetection } from "./verifyType";
 import { Callback, IAnyObject } from "@lesliejs/types";
 
 export function getLocationHref(): string {

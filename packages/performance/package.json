@@ -1,5 +1,5 @@
 {
-  "name": "@lesliejs/types",
+  "name": "@lesliejs/performance",
   "version": "3.0.0",
   "description": "",
   "main": "src/index.ts",
@@ -13,11 +13,14 @@
   ],
   "author": "LeslieChen",
   "license": "ISC",
-  "dependencies": {
-    "@lesliejs/common": "workspace:*"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/chenwenlong7/proressive-fancy"
+  },
+  "dependencies": {
+    "@lesliejs/common": "workspace:*",
+    "@lesliejs/types": "workspace:*",
+    "@lesliejs/utils": "workspace:*",
+    "web-vitals": "^3.1.0"
   }
 }

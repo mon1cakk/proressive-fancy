@@ -1,5 +1,3 @@
-import pako from "pako";
-import { Base64 } from "js-base64";
 import { setFlag, _support } from "./global";
 import { InitOptions } from "@lesliejs/types";
 import { EVENTTYPES } from "@lesliejs/common";
@@ -24,12 +22,12 @@ export function htmlElementAsString(target: HTMLElement): string {
 }
 /**
  * 将地址字符串转换成对象，
- * 输入：'https://github.com/leslie/monica?token=123&name=11'
+ * 输入：'https://github.com/xy-sea/lesliejs?token=123&name=11'
  * 输出：{
  *  "host": "github.com",
- *  "path": "/leslie/monica",
+ *  "path": "/xy-sea/lesliejs",
  *  "protocol": "https",
- *  "relative": "/leslie/monica?token=123&name=11"
+ *  "relative": "/xy-sea/lesliejs?token=123&name=11"
  * }
  */
 export function parseUrlToObj(url: string) {
@@ -53,25 +51,6 @@ export function parseUrlToObj(url: string) {
   };
 }
 
-// 压缩
-export function zip(data: any): string {
-  if (!data) return data;
-  // 判断数据是否需要转为JSON
-  const dataJson =
-    typeof data !== "string" && typeof data !== "number"
-      ? JSON.stringify(data)
-      : data;
-  // 使用Base64.encode处理字符编码，兼容中文
-  const str = Base64.encode(dataJson as string);
-  const binaryString = pako.gzip(str);
-  const arr = Array.from(binaryString);
-  let s = "";
-  arr.forEach((item: number) => {
-    s += String.fromCharCode(item);
-  });
-  return Base64.btoa(s);
-}
-
 export function setSilentFlag(paramOptions: InitOptions): void {
   setFlag(EVENTTYPES.XHR, !!paramOptions.silentXhr);
   setFlag(EVENTTYPES.FETCH, !!paramOptions.silentFetch);
@@ -83,8 +62,6 @@ export function setSilentFlag(paramOptions: InitOptions): void {
     EVENTTYPES.UNHANDLEDREJECTION,
     !!paramOptions.silentUnhandledrejection
   );
-  setFlag(EVENTTYPES.PERFORMANCE, !!paramOptions.silentPerformance);
-  setFlag(EVENTTYPES.RECORDSCREEN, !paramOptions.silentRecordScreen);
   setFlag(EVENTTYPES.WHITESCREEN, !paramOptions.silentWhiteScreen);
 }
 

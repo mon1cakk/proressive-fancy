@@ -1,9 +1,19 @@
-import { handleOptions, log, setupReplace, HandleEvents } from "./core";
-import { _global, getFlag, setFlag } from "@lesliejs/utils";
+import {
+  subscribeEvent,
+  notify,
+  transportData,
+  breadcrumb,
+  options,
+  handleOptions,
+  log,
+  setupReplace,
+  HandleEvents,
+} from "./core/index";
+import { _global, getFlag, setFlag, nativeTryCatch } from "@lesliejs/utils";
 import { SDK_VERSION, SDK_NAME, EVENTTYPES } from "@lesliejs/common";
 import { InitOptions, VueInstance, ViewModel } from "@lesliejs/types";
 
-function init(options: InitOptions): void {
+function init(options: InitOptions) {
   if (!options.dsn || !options.apikey) {
     return console.error(
       `lesliejs 缺少必须配置项：${!options.dsn ? "dsn" : "apikey"} `
@@ -15,7 +25,7 @@ function init(options: InitOptions): void {
   setupReplace();
 }
 
-function install(Vue: VueInstance, options: InitOptions): void {
+function install(Vue: VueInstance, options: InitOptions) {
   if (getFlag(EVENTTYPES.VUE)) return;
   setFlag(EVENTTYPES.VUE, true);
   const handler = Vue.config.errorHandler;
@@ -39,11 +49,29 @@ function errorBoundary(err: Error): void {
   HandleEvents.handleError(err);
 }
 
+function use(plugin: any, option: any) {
+  const instance = new plugin(option);
+  if (
+    !subscribeEvent({
+      callback: (data) => {
+        instance.transform(data);
+      },
+      type: instance.type,
+    })
+  )
+    return;
+
+  nativeTryCatch(() => {
+    instance.core({ transportData, breadcrumb, options, notify });
+  });
+}
+
 export default {
   SDK_VERSION,
   SDK_NAME,
   init,
   install,
   errorBoundary,
+  use,
   log,
 };

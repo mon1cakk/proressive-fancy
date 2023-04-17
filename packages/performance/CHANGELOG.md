@@ -1,4 +1,4 @@
-# @lesliejs/core
+# @lesliejs/performance
 
 ## 3.0.0
 

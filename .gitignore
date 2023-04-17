@@ -2,3 +2,7 @@
 node_modules
 yarn-error.log
 .npmrc
+vue.config
+
+packages/*/dist
+packages/*/node_modules

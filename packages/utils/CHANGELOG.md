@@ -1,13 +1,40 @@
 # @lesliejs/utils
 
-## 1.1.0
+## 3.0.0
 
-### Minor Changes
+### Major Changes
 
-- 1.1.0
+- 3.0.0
 
 ### Patch Changes
 
 - Updated dependencies
-  - @lesliejs/common@1.1.0
-  - @lesliejs/types@1.1.0
+  - @lesliejs/common@3.0.0
+  - @lesliejs/types@3.0.0
+  - @lesliejs/core@3.0.0
+
+## 2.0.0
+
+### Major Changes
+
+- 2.2.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @lesliejs/common@2.0.0
+  - @lesliejs/types@2.0.0
+  - @lesliejs/core@2.0.0
+
+## 1.2.0
+
+### Minor Changes
+
+- 1.2.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @lesliejs/common@1.2.0
+  - @lesliejs/types@1.2.0
+  - @lesliejs/core@1.2.0

@@ -1,10 +1,8 @@
 {
   "name": "progressive-fancy",
-  "version": "1.0.0",
-  "description": "",
+  "description": "前端监控SDK，可用来收集并上报：代码报错、性能数据、用户行为、加载资源、个性化指标等数据",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "pnpm --filter=@lesliejs/* run build",
+    "build": "rollup -c",
     "clear": "rimraf 'packages/*/{lib,node_modules}' && rimraf node_modules",
     "changeset": "changeset",
     "version-packages": "changeset version",
@@ -15,7 +13,7 @@
     "commit": "git add . && git cz",
     "postinstall": "husky install"
   },
-  "author": "leslieChen",
+  "author": "LeslieChen",
   "license": "ISC",
   "dependencies": {
     "bowser": "^2.11.0",

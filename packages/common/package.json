@@ -11,10 +11,10 @@
   "files": [
     "dist"
   ],
-  "author": "",
+  "author": "LeslieChen",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/chenwenlong7/proressive-fancy"
   }
 }

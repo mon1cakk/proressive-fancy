@@ -41,11 +41,12 @@ export class TransportData {
     this.queue.addFn(requestFun);
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async beforePost(this: any, data: ReportData): Promise<ReportData | boolean> {
     let transportData = this.getTransportData(data);
     // 配置了beforeDataReport
     if (typeof this.beforeDataReport === "function") {
-      transportData = await this.beforeDataReport(transportData);
+      transportData = this.beforeDataReport(transportData);
       if (!transportData) return false;
     }
     return transportData;
@@ -60,8 +61,6 @@ export class TransportData {
           "Content-Type": "application/json",
         },
       });
-      // .then(response => response.json());
-      // .then((res) => console.log(res));
     };
     this.queue.addFn(requestFun);
   }
@@ -98,11 +97,12 @@ export class TransportData {
     };
 
     // 性能数据、录屏、白屏检测等不需要附带用户行为
-    if (
-      data.type != EVENTTYPES.PERFORMANCE &&
-      data.type != EVENTTYPES.RECORDSCREEN &&
-      data.type != EVENTTYPES.WHITESCREEN
-    ) {
+    const excludeRreadcrumb = [
+      EVENTTYPES.PERFORMANCE,
+      EVENTTYPES.RECORDSCREEN,
+      EVENTTYPES.WHITESCREEN,
+    ];
+    if (!excludeRreadcrumb.includes(data.type)) {
       info.breadcrumb = breadcrumb.getStack(); // 获取用户行为栈
     }
     return info;
@@ -138,7 +138,7 @@ export class TransportData {
       );
       return;
     }
-    // 开启录屏
+    // 开启录屏，由@lesliejs/recordScreen 插件控制
     if (_support.options.silentRecordScreen) {
       if (options.recordScreenTypeList.includes(data.type)) {
         // 修改hasError

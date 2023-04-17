@@ -1,4 +1,4 @@
-# @lesliejs/core
+# @lesliejs/recordscreen
 
 ## 3.0.0
 

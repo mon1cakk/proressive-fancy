@@ -1,6 +1,6 @@
 import { UAParser } from "ua-parser-js";
-import { variableTypeDetection } from "./is";
-import { lesliejs } from "@lesliejs/types";
+import { variableTypeDetection } from "./verifyType";
+import { lesliejs, Window } from "@lesliejs/types";
 
 export const isBrowserEnv = variableTypeDetection.isWindow(
   typeof window !== "undefined" ? window : 0
@@ -25,6 +25,9 @@ _support.deviceInfo = {
   device_type: uaResult.device.type ? uaResult.device.type : "Pc",
 };
 
+_support.hasError = false;
+
+// errorMap 存储代码错误的集合
 _support.errorMap = new Map();
 
 _support.replaceFlag = _support.replaceFlag || {};
